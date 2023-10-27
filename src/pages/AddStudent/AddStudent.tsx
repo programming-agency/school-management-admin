@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import axios from 'axios';
 
 interface FormData {
     studentName: string;
@@ -11,7 +12,6 @@ interface FormData {
     motherName: string;
     gender: string;
     address: string;
-    image: File;
     studentClass: string;
     classRoll: string;
     email: string;
@@ -21,20 +21,15 @@ interface FormData {
 
 export const AddStudent = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
-    const [imageURL, setImageURL] = useState<string | null>(null);
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const imageURL = URL.createObjectURL(file);
-            setImageURL(imageURL);
+    const onSubmit: SubmitHandler<FormData> = async (data) => {
+        console.log(data);
+        try {
+            const response = await axios.post('http://localhost:5000/api/students', data);
+            console.log('Data uploaded successfully', response.data);
+        } catch (error) {
+            console.error('Error uploading data', error);
         }
-    };
-
-    const onSubmit: SubmitHandler<FormData> = (data) => {
-        // You can handle the uploaded image in the `data.image` property.
-        // You may want to send it to your server or perform any other actions.
-        console.log('Form Data:', data);
     };
 
     return (
@@ -84,7 +79,7 @@ export const AddStudent = () => {
                         label="Date of Birth"
                         fullWidth
                         type="date"
-                        InputLabelProps={{ shrink: true }} // Add this line
+                        InputLabelProps={{ shrink: true }}
                         {...register("dateOfBirth", { required: 'Date of Birth is required' })}
                         error={Boolean(errors.dateOfBirth)}
                         helperText={errors.dateOfBirth && errors.dateOfBirth.message}
@@ -141,20 +136,6 @@ export const AddStudent = () => {
                         helperText={errors.address && errors.address.message}
                     />
                 </Grid>
-                <Grid item xs={6}>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        {...register("image", { required: 'Image is required' })}
-                        onChange={handleFileChange}
-                    />
-                    {errors.image && <p className="text-red-500">{errors.image.message}</p>}
-                </Grid>
-                {imageURL && (
-                    <Grid item xs={6}>
-                        <img src={imageURL} alt="Selected" style={{ maxWidth: '100%' }} />
-                    </Grid>
-                )}
                 <Grid item xs={12}>
                     <Button type="submit" variant="contained" color="primary">
                         Submit

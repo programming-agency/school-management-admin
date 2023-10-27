@@ -1,5 +1,6 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import React, { useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import axios from 'axios';
 import './index.css';
 import {
   createBrowserRouter,
@@ -20,7 +21,8 @@ import { Teacher } from './pages/Teacher/Teacher';
 import { Notices } from './pages/Notices/Notices';
 import { AddTeacher } from './pages/AddTeacher/AddTeacher';
 import { AddStudent } from './pages/AddStudent/AddStudent';
- 
+import { SERVER_URL } from './config/config';
+
 
 
 const THEME = createTheme({
@@ -32,52 +34,56 @@ const THEME = createTheme({
     "fontWeightMedium": 600
   }
 });
+const Root = () => {
+  useEffect(() => {
+    axios.defaults.baseURL = SERVER_URL;
+  }, []);
 
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path="/" element={<App />}>
 
-      {/* User routes start */}
-      <Route index element={<Navigate to='/app' />} />
-      <Route path='/app' element={<PrivateLayout />}>
-        <Route index element={<Dashboard />} />
-        <Route path="students" element={<Student />} />
-        <Route path="teachers" element={<Teacher />} />
-        <Route path="notices" element={<Notices />} />
-        <Route path="addTeacher" element={<AddTeacher />} />
-        <Route path="addStudent" element={<AddStudent />} />
-      
-    
-      
-        
-       
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Route path="/" element={<App />}>
+
+        {/* User routes start */}
+        <Route index element={<Navigate to='/app' />} />
+        <Route path='/app' element={<PrivateLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="students" element={<Student />} />
+          <Route path="teachers" element={<Teacher />} />
+          <Route path="notices" element={<Notices />} />
+          <Route path="addTeacher" element={<AddTeacher />} />
+          <Route path="addStudent" element={<AddStudent />} />
+
+
+
+
+
+        </Route>
+        {/* User routes end */}
+
+        {/* Auth routes start */}
+        <Route path='/auth' element={<PublicLayout />}>
+          <Route index element={<Navigate to={'/auth/login'} />} />
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+        </Route>
+        {/* Auth routes end */}
+
+        {/* Not found route start */}
+        <Route path='*' element={<Navigate to={'/'} />} />
+        {/* Not found route end */}
       </Route>
-      {/* User routes end */}
+    )
+  );
 
-      {/* Auth routes start */}
-      <Route path='/auth' element={<PublicLayout />}>
-        <Route index element={<Navigate to={'/auth/login'} />} />
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
-      </Route>
-      {/* Auth routes end */}
-
-      {/* Not found route start */}
-      <Route path='*' element={<Navigate to={'/'} />} />
-      {/* Not found route end */}
-    </Route>
-  )
-);
+  return (
+    <React.StrictMode>
+      <ThemeProvider theme={THEME}>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </React.StrictMode>
+  );
+};
 
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-
-root.render(
-  <React.StrictMode>
-    <ThemeProvider theme={THEME}>
-      <RouterProvider router={router} />
-    </ThemeProvider>
-  </React.StrictMode>
-);
+ReactDOM.render(<Root />, document.getElementById('root'));
