@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import axios from 'axios';
 
 interface FormData {
   name: string;
@@ -13,28 +14,32 @@ interface FormData {
   age: number;
   education: string;
   address: string;
-  image: File;
-  Position: string;
+  // image: File;
+  position: string;
   dateOfBirth: string;
   idNumber: number;
 }
 
 export const AddTeacher = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
-  const [imageURL, setImageURL] = useState<string | null>(null);
+  // const [imageURL, setImageURL] = useState<string | null>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const imageURL = URL.createObjectURL(file);
-      setImageURL(imageURL);
+  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (file) {
+  //     const imageURL = URL.createObjectURL(file);
+  //     setImageURL(imageURL);
+  //   }
+  // };
+
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    console.log(data);
+    try {
+      const response = await axios.post('http://localhost:5000/api/teacher', data);
+      console.log('Data uploaded successfully', response.data);
+    } catch (error) {
+      console.error('Error uploading data', error);
     }
-  };
-
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    // You can handle the uploaded image in the `data.image` property.
-    // You may want to send it to your server or perform any other actions.
-    console.log('Form Data:', data);
   };
 
   return (
@@ -129,11 +134,11 @@ export const AddTeacher = () => {
 
         <Grid item xs={6}>
           <TextField
-            label="Position"
+            label="position"
             fullWidth
             select
-            {...register("Position", { required: 'Position is required' })}
-            error={Boolean(errors.Position)}
+            {...register("position", { required: 'position is required' })}
+            error={Boolean(errors.position)}
           >
             <MenuItem value="Head Teacher">Head Teacher</MenuItem>
             <MenuItem value="Ass. HeadTeacher">Ass. HeadTeacher</MenuItem>
@@ -152,7 +157,7 @@ export const AddTeacher = () => {
             helperText={errors.address && errors.address.message}
           />
         </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <input
             type="file"
             accept="image/*"
@@ -167,7 +172,7 @@ export const AddTeacher = () => {
           <Grid item xs={12}>
             <img src={imageURL} alt="Selected" style={{ maxWidth: '100%' }} />
           </Grid>
-        )}
+        )} */}
         <Grid item xs={12}>
           <Button type="submit" variant="contained" color="primary">
             Submit
