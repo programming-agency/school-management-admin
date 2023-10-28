@@ -5,6 +5,8 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import axios from 'axios';
+import { SERVER_URL } from '../../config/config';
+ 
 
 interface FormData {
   name: string;
@@ -35,7 +37,7 @@ export const AddTeacher = () => {
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     console.log(data);
     try {
-      const response = await axios.post('http://localhost:5000/api/teacher', data);
+      const response = await axios.post(`${SERVER_URL}/api/teachers`, data);
       console.log('Data uploaded successfully', response.data);
     } catch (error) {
       console.error('Error uploading data', error);

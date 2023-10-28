@@ -6,6 +6,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { SERVER_URL } from '../../../config/config';
 
 interface FormData {
   email: string;
@@ -28,8 +30,15 @@ export default function Login() {
   } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
-  const onSubmit = (data: FormData) => {
-    console.log(data); // Submit your form data here
+  const onSubmit = async (data: FormData) => {
+    console.log(data);
+
+    try {
+      const response = await axios.post(`${SERVER_URL}/api/login`, data)
+      console.log("User Login Successfully", response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
 
@@ -95,7 +104,7 @@ export default function Login() {
             <Box className="text-center">I Have No Account, Please <Link className='text-red-500' to='/auth/register'>Register</Link> </Box>
           </form>
           {/* image section */}
-          <Box sx={{backgroundImage: 'url(/auth-bg.jpg)'}} className='flex-grow bg-cover bg-center bg-no-repeat h-full bg-blue-400'/>
+          <Box sx={{ backgroundImage: 'url(/auth-bg.jpg)' }} className='flex-grow bg-cover bg-center bg-no-repeat h-full bg-blue-400' />
         </Box>
       </Paper>
     </Box>

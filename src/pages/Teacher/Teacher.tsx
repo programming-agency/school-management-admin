@@ -18,8 +18,7 @@ export const Teacher = () => {
     };
 
     return (
-        <Box>
-             
+        <Box>            
                 <Box className='flex justify-between items-center px-'>
                     <Typography variant="h6" component="div">Invoice</Typography>
                     <Link to={Paths.ADD_TEACHER}>
@@ -54,6 +53,8 @@ export const Teacher = () => {
                 </Paper>
             </Box>
             {/* show Teacher */}
+
+            
             <Box>
                 <Tables />
             </Box>

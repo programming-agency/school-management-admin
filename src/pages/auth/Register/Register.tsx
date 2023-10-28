@@ -6,19 +6,22 @@ import { Link } from 'react-router-dom';
 import { useForm, } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
+import axios from 'axios';
+import { SERVER_URL } from '../../../config/config';
 
 interface FormData {
   schoolName: string;
+  name: string;
   email: string;
   phone: string;
-  address: string;
   password: string;
 }
 
+// Yep validation
 const schema = yup
   .object({
     schoolName: yup.string().required("Name is required"),
-    address: yup.string().required("address is required"),
+    name: yup.string().required("Name is required"),
     email: yup.string().email("Invalid email").required("Email is required"),
     phone: yup.string().matches(/^(?:\+8801\d{9}|01\d{9})$/, "Phone number is not valid").required("Phone Number is required"),
     password: yup
@@ -40,7 +43,18 @@ export default function Register() {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data: FormData) => console.log(data);
+  const onSubmit = async (data: FormData) => {
+    console.log(data);
+    try {
+      const response = await axios.post(`${SERVER_URL}/api/register`, data)
+      console.log("User create successFully", response.data);
+    } catch (error) {
+      console.log(error);
+
+    }
+
+  }
+
 
   // show hide password 
   const [showPassword, setShowPassword] = React.useState(false);
@@ -68,6 +82,17 @@ export default function Register() {
                 helperText={errors.schoolName?.message}
               />
             </Box>
+            <Box>
+              < TextField
+                variant="filled"
+                fullWidth
+                label='Your Name'
+                {...register("name")}
+                error={Boolean(errors.name)}
+                helperText={errors.name?.message}
+              />
+            </Box>
+
             <Box >
               <TextField
                 label="Email"
@@ -89,16 +114,7 @@ export default function Register() {
                 helperText={errors.phone?.message}
               />
             </Box>
-            <Box>
-              < TextField
-                variant="filled"
-                fullWidth
-                label='Address'
-                {...register("address")}
-                error={Boolean(errors.address)}
-                helperText={errors.address?.message}
-              />
-            </Box>
+
             <FormControl variant="filled" fullWidth error={Boolean(errors.password)}>
               <InputLabel htmlFor="filled-adornment-password">
                 Password
