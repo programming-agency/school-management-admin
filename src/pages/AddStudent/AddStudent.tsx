@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -19,15 +19,42 @@ interface FormData {
     email: string;
     phone: string;
     dateOfBirth: string;
+    bloodGroup: string;
+    section: string;
+    image: string;
 }
 
 export const AddStudent = () => {
+    const [file, setFile] = useState<File | undefined>()
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
-    const onSubmit: SubmitHandler<FormData> = async (data) => {
+    function handleImage(e: React.FormEvent<HTMLInputElement>) {
+        const target = e.target as HTMLIFrameElement & {
+            files: FileList
+        }
+        setFile(target.files[0]);
+    }
+
+    const onSubmit = async (data: FormData) => {
         console.log(data);
+
+        if (typeof file === "undefined") return
+
+        const formData = new FormData();
+        formData.append('file', file)
+        formData.append('upload_preset', "seytcuol")
+        formData.append('api_key', "512147963287944")
+        console.log(file);
+
+        const result = await fetch('https://api.cloudinary.com/v1_1/dofqwdx2y/image/upload', {
+            method: "POST",
+            body: formData
+        }).then(r => r.json());
+        console.log("result", result.secure_url);
+        // console.log("result", result.secure_url);
+
         try {
-            const response = await axios.post(`${SERVER_URL}/api/students`, data);
+            const response = await axios.post(`${SERVER_URL}/api/students`, { ...data, image: result.secure_url });
             console.log('Data uploaded successfully', response.data);
         } catch (error) {
             console.error('Error uploading data', error);
@@ -72,8 +99,9 @@ export const AddStudent = () => {
                         {...register("gender", { required: 'Gender is required' })}
                         error={Boolean(errors.gender)}
                     >
-                        <MenuItem value="male">Male</MenuItem>
-                        <MenuItem value="female">Female</MenuItem>
+                        <MenuItem value="Male">Male</MenuItem>
+                        <MenuItem value="Female">Female</MenuItem>
+                        <MenuItem value="Other">Other</MenuItem>
                     </TextField>
                 </Grid>
                 <Grid item xs={6}>
@@ -104,6 +132,34 @@ export const AddStudent = () => {
                 </Grid>
                 <Grid item xs={6}>
                     <TextField
+                        label="Section"
+                        fullWidth
+                        select
+                        {...register("section", { required: 'Class is required' })}
+                        error={Boolean(errors.section)}
+                    >
+                        <MenuItem value="A">A</MenuItem>
+                        <MenuItem value="B">B</MenuItem>
+                        <MenuItem value="C">C</MenuItem>
+
+                    </TextField>
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        label="Blood Group"
+                        fullWidth
+                        select
+                        {...register("bloodGroup", { required: 'Blood Group is required' })}
+                        error={Boolean(errors.bloodGroup)}
+                    >
+                        <MenuItem value="A+">A+</MenuItem>
+                        <MenuItem value="B+">B+</MenuItem>
+                        <MenuItem value="AB+">AB+</MenuItem>
+                        <MenuItem value="O+">O+</MenuItem>
+                    </TextField>
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
                         label="Class Roll"
                         fullWidth
                         {...register("classRoll", { required: 'Class Roll is required' })}
@@ -129,6 +185,7 @@ export const AddStudent = () => {
                         helperText={errors.phone && errors.phone.message}
                     />
                 </Grid>
+
                 <Grid item xs={6}>
                     <TextField
                         label="Address"
@@ -137,6 +194,9 @@ export const AddStudent = () => {
                         error={Boolean(errors.address)}
                         helperText={errors.address && errors.address.message}
                     />
+                </Grid>
+                <Grid item xs={6}>
+                    <input type="file" accept="image/*" name="image" id="" onChange={handleImage} />
                 </Grid>
                 <Grid item xs={12}>
                     <Button type="submit" variant="contained" color="primary">

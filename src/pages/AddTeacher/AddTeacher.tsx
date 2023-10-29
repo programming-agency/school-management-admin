@@ -6,7 +6,7 @@ import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import axios from 'axios';
 import { SERVER_URL } from '../../config/config';
- 
+
 
 interface FormData {
   name: string;
@@ -16,28 +16,49 @@ interface FormData {
   age: number;
   education: string;
   address: string;
-  // image: File;
+  image: string;
   position: string;
   dateOfBirth: string;
   idNumber: number;
+  joinDate: string;
+  subject: string;
+  bloodGroup: string;
 }
 
 export const AddTeacher = () => {
+  const [file, setFile] = useState<File | undefined>()
+
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
-  // const [imageURL, setImageURL] = useState<string | null>(null);
 
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (file) {
-  //     const imageURL = URL.createObjectURL(file);
-  //     setImageURL(imageURL);
-  //   }
-  // };
 
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
+  function handleImage(e: React.FormEvent<HTMLInputElement>) {
+    const target = e.target as HTMLIFrameElement & {
+      files: FileList
+    }
+    setFile(target.files[0]);
+  }
+  
+
+  const onSubmit = async (data: FormData) => {
     console.log(data);
+
+    if (typeof file === "undefined") return
+
+    const formData = new FormData();
+    formData.append('file', file)
+    formData.append('upload_preset', "seytcuol")
+    formData.append('api_key', "512147963287944")
+    console.log(file);
+
+    const result = await fetch('https://api.cloudinary.com/v1_1/dofqwdx2y/image/upload', {
+      method: "POST",
+      body: formData
+    }).then(r => r.json());
+    console.log("result", result.secure_url);
+    // console.log("result", result.secure_url);
+
     try {
-      const response = await axios.post(`${SERVER_URL}/api/teachers`, data);
+      const response = await axios.post(`${SERVER_URL}/api/teachers`, { ...data, image: result.secure_url });
       console.log('Data uploaded successfully', response.data);
     } catch (error) {
       console.error('Error uploading data', error);
@@ -82,18 +103,6 @@ export const AddTeacher = () => {
         </Grid>
         <Grid item xs={6}>
           <TextField
-            label="Gender"
-            fullWidth
-            select
-            {...register("gender", { required: 'Gender is required' })}
-            error={Boolean(errors.gender)}
-          >
-            <MenuItem value="male">Male</MenuItem>
-            <MenuItem value="female">Female</MenuItem>
-          </TextField>
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
             label="Age"
             fullWidth
             type="number"
@@ -101,6 +110,33 @@ export const AddTeacher = () => {
             error={Boolean(errors.age)}
             helperText={errors.age && errors.age.message}
           />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField
+            label="Gender"
+            fullWidth
+            select
+            {...register("gender", { required: 'Gender is required' })}
+            error={Boolean(errors.gender)}
+          >
+            <MenuItem value="Male">Male</MenuItem>
+            <MenuItem value="Female">Female</MenuItem>
+            <MenuItem value="Other">Other</MenuItem>
+          </TextField>
+        </Grid>
+        <Grid item xs={6}>
+          <TextField
+            label="Blood Group"
+            fullWidth
+            select
+            {...register("bloodGroup", { required: 'Blood Group is required' })}
+            error={Boolean(errors.bloodGroup)}
+          >
+            <MenuItem value="A+">A+</MenuItem>
+            <MenuItem value="B+">B+</MenuItem>
+            <MenuItem value="AB+">AB+</MenuItem>
+            <MenuItem value="O+">O+</MenuItem>
+          </TextField>
         </Grid>
         <Grid item xs={6}>
           <TextField
@@ -122,18 +158,6 @@ export const AddTeacher = () => {
             helperText={errors.dateOfBirth && errors.dateOfBirth.message}
           />
         </Grid>
-
-        <Grid item xs={6}>
-          <TextField
-            label="ID Card Number"
-            fullWidth
-            type="number" // Set type as "date"
-            {...register("idNumber", { required: 'ID Card Number  is required' })}
-            error={Boolean(errors.idNumber)}
-            helperText={errors.idNumber && errors.idNumber.message}
-          />
-        </Grid>
-
         <Grid item xs={6}>
           <TextField
             label="position"
@@ -149,7 +173,43 @@ export const AddTeacher = () => {
             <MenuItem value="Pion">Pion</MenuItem>
           </TextField>
         </Grid>
-
+        <Grid item xs={6}>
+          <TextField
+            label="Subject"
+            fullWidth
+            select
+            {...register("subject", { required: 'subject is required' })}
+            error={Boolean(errors.subject)}
+          >
+            <MenuItem value="Bangla">Bangla</MenuItem>
+            <MenuItem value="English">English</MenuItem>
+            <MenuItem value="Math">Math</MenuItem>
+            <MenuItem value="Ict">ICT</MenuItem>
+            <MenuItem value="Science">Science</MenuItem>
+            <MenuItem value="Islam">Islam</MenuItem>
+          </TextField>
+        </Grid>
+        <Grid item xs={6}>
+          <TextField
+            label="Join Date"
+            fullWidth
+            type="date"
+            InputLabelProps={{ shrink: true }} // Add this line
+            {...register("joinDate", { required: 'Join Date is required' })}
+            error={Boolean(errors.joinDate)}
+            helperText={errors.joinDate && errors.joinDate.message}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField
+            label="NID Card Number"
+            fullWidth
+            type="number" // Set type as "date"
+            {...register("idNumber", { required: 'ID Card Number  is required' })}
+            error={Boolean(errors.idNumber)}
+            helperText={errors.idNumber && errors.idNumber.message}
+          />
+        </Grid>
         <Grid item xs={6}>
           <TextField
             label="Address"
@@ -159,6 +219,10 @@ export const AddTeacher = () => {
             helperText={errors.address && errors.address.message}
           />
         </Grid>
+        <Grid item xs={6}>
+          <input type="file" accept="image/*" name="image" id="" onChange={handleImage} />
+        </Grid>
+
         {/* <Grid item xs={12}>
           <input
             type="file"
