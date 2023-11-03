@@ -2,9 +2,11 @@ import React from 'react'
 import { Box, Paper, Button, FormControl, Select, MenuItem, SelectChangeEvent, OutlinedInput, InputAdornment, Typography } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
-import { Tables } from '../../components/Tabel/Tables';
 import { Link } from 'react-router-dom';
 import { Paths } from '../../constants/paths';
+import { StudentTable } from '../../components/Tabel/StudentTables';
+
+
 
 
 export const Student = () => {
@@ -54,7 +56,7 @@ export const Student = () => {
                 </Paper>
             </Box>
             <Box>
-                <Tables />
+                <StudentTable />
             </Box>
 
         </Box>

@@ -6,6 +6,7 @@ import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import axios from 'axios';
 import { SERVER_URL } from '../../config/config';
+import { Box } from '@mui/material';
 
 
 interface FormData {
@@ -27,6 +28,7 @@ interface FormData {
 
 export const AddTeacher = () => {
   const [file, setFile] = useState<File | undefined>()
+  const [imageURL, setImageURL] = useState<string>('');
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
@@ -36,11 +38,12 @@ export const AddTeacher = () => {
       files: FileList
     }
     setFile(target.files[0]);
+    setImageURL(URL.createObjectURL(target.files[0]));
   }
-  
+
 
   const onSubmit = async (data: FormData) => {
-    console.log(data);
+    // console.log(data);
 
     if (typeof file === "undefined") return
 
@@ -48,13 +51,14 @@ export const AddTeacher = () => {
     formData.append('file', file)
     formData.append('upload_preset', "seytcuol")
     formData.append('api_key', "512147963287944")
-    console.log(file);
+    // console.log(file);
 
     const result = await fetch('https://api.cloudinary.com/v1_1/dofqwdx2y/image/upload', {
       method: "POST",
       body: formData
     }).then(r => r.json());
     console.log("result", result.secure_url);
+    // setImageURL(result.secure_url);
     // console.log("result", result.secure_url);
 
     try {
@@ -67,6 +71,8 @@ export const AddTeacher = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <Box className='text-center text-4xl mb-5 border-b-2 '> Add New  Teacher </Box>
+
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <TextField
@@ -160,7 +166,7 @@ export const AddTeacher = () => {
         </Grid>
         <Grid item xs={6}>
           <TextField
-            label="position"
+            label="Position"
             fullWidth
             select
             {...register("position", { required: 'position is required' })}
@@ -223,22 +229,11 @@ export const AddTeacher = () => {
           <input type="file" accept="image/*" name="image" id="" onChange={handleImage} />
         </Grid>
 
-        {/* <Grid item xs={12}>
-          <input
-            type="file"
-            accept="image/*"
-            {...register("image", { required: 'Image is required' })}
-            onChange={handleFileChange}
-          />
-          {errors.image && (
-            <p className="text-red-500">{errors.image.message}</p>
-          )}
-        </Grid>
-        {imageURL && (
+        {imageURL && ( // Display the image only when imageURL is not empty
           <Grid item xs={12}>
-            <img src={imageURL} alt="Selected" style={{ maxWidth: '100%' }} />
+            <img src={imageURL} alt="Uploaded" placeholder='photo' className='h-40 w-40 border-2' style={{ maxWidth: '100%' }} />
           </Grid>
-        )} */}
+        )}
         <Grid item xs={12}>
           <Button type="submit" variant="contained" color="primary">
             Submit

@@ -22,6 +22,8 @@ import { Notices } from './pages/Notices/Notices';
 import { AddTeacher } from './pages/AddTeacher/AddTeacher';
 import { AddStudent } from './pages/AddStudent/AddStudent';
 import { SERVER_URL } from './config/config';
+import UpdateStudent from './pages/UpdateStudent/UpdateStudent';
+import UpdateTeacher from './pages/UpdateTeacher/UpdateTeacher';
 
 
 
@@ -53,6 +55,8 @@ const Root = () => {
           <Route path="notices" element={<Notices />} />
           <Route path="addTeacher" element={<AddTeacher />} />
           <Route path="addStudent" element={<AddStudent />} />
+          <Route path="updateStudent/:id" element={<UpdateStudent />} />
+          <Route path="updateTeacher/:id" element={< UpdateTeacher />} />
 
 
 
