@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { SERVER_URL } from '../../config/config';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
@@ -32,23 +32,22 @@ export default function UpdateStudent() {
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
     const [student, setStudent] = useState<any>({})
     const { id } = useParams<{ id: string }>();
-    console.log(id);
+    // console.log(id);
+
+    const Navigate = useNavigate();
 
     useEffect(() => {
         const getPosts = async () => {
             try {
-                const result = await axios(`${SERVER_URL}/api/students/${id}`);
+                const result = await axios.put(`${SERVER_URL}/api/students/${id}`);
                 setStudent(result.data.student);
                 // console.log(result.data.student);
             } catch (error) {
                 console.error('Error fetching student:', error);
             }
         };
-
         getPosts();
     }, []);
-
-
 
     function handleImage(e: React.FormEvent<HTMLInputElement>) {
         const target = e.target as HTMLIFrameElement & {
@@ -58,7 +57,6 @@ export default function UpdateStudent() {
         setImageURL(URL.createObjectURL(target.files[0]));
     }
     const onSubmit = async (data: FormData) => {
-        // console.log(data);
         if (typeof file === "undefined") return
 
         const formData = new FormData();
@@ -72,13 +70,12 @@ export default function UpdateStudent() {
             body: formData
         }).then(r => r.json());
         console.log("result", result.secure_url);
-        // console.log("result", result.secure_url);
-
         try {
-            const response = await axios.post(`${SERVER_URL}/api/students`, { ...data, image: result.secure_url });
-            console.log('Data uploaded successfully', response.data);
+            const response = await axios.put(`${SERVER_URL}/api/students/${id}`, { ...data, image: result.secure_url });
+            console.log('Student Information updated successfully', response.data);
+            Navigate('/app/students')
         } catch (error) {
-            console.error('Error uploading data', error);
+            console.error('Error updating student data', error);
         }
     };
 

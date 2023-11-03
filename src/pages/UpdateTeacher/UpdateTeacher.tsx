@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { SERVER_URL } from '../../config/config';
 import { Box, Button, Grid, MenuItem, TextField } from '@mui/material';
 import { useForm } from 'react-hook-form';
@@ -25,68 +25,63 @@ interface FormData {
 
 export default function UpdateTeacher() {
 
-    const [teacher, setTeacher] = useState<any>({})
+    const [teacher, setTeacher] = useState<any>({});
     const [imageURL, setImageURL] = useState<string>('');
-
+    const [file, setFile] = useState<File | undefined>();
+    const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
     const { id } = useParams<{ id: string }>();
-    console.log(id);
 
     useEffect(() => {
-        const getPosts = async () => {
+        const getTeacherData = async () => {
             try {
-                const result = await axios(`${SERVER_URL}/api/teachers/${id}`);
+                const result = await axios.get(`${SERVER_URL}/api/teachers/${id}`);
                 setTeacher(result.data.teacher);
-                console.log(result.data.teacher);
             } catch (error) {
-                console.error('Error fetching student:', error);
+                console.error('Error fetching teacher:', error);
             }
         };
 
-        getPosts();
-    }, []);
-
-    console.log(teacher);
-
-    const [file, setFile] = useState<File | undefined>()
-
-    const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
-
+        getTeacherData();
+    }, [id]);
 
     function handleImage(e: React.FormEvent<HTMLInputElement>) {
-        const target = e.target as HTMLIFrameElement & {
-            files: FileList
+        const target = e.target as HTMLInputElement;
+        if (target.files && target.files[0]) {
+            setFile(target.files[0]);
+            setImageURL(URL.createObjectURL(target.files[0]));
         }
-        setFile(target.files[0]);
-        setImageURL(URL.createObjectURL(target.files[0]));
     }
 
-
     const onSubmit = async (data: FormData) => {
-        console.log(data);
-
-        if (typeof file === "undefined") return
-
-        const formData = new FormData();
-        formData.append('file', file)
-        formData.append('upload_preset', "seytcuol")
-        formData.append('api_key', "512147963287944")
-        console.log(file);
-
-        const result = await fetch('https://api.cloudinary.com/v1_1/dofqwdx2y/image/upload', {
-            method: "POST",
-            body: formData
-        }).then(r => r.json());
-        console.log("result", result.secure_url);
-        // console.log("result", result.secure_url);
-
         try {
-            const response = await axios.post(`${SERVER_URL}/api/teachers`, { ...data, image: result.secure_url });
-            console.log('Data uploaded successfully', response.data);
+            if (!file) {
+                throw new Error('No image selected');
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', 'seytcuol');
+            formData.append('api_key', '512147963287944');
+
+            const imageUploadResult = await fetch('https://api.cloudinary.com/v1_1/dofqwdx2y/image/upload', {
+                method: 'POST',
+                body: formData,
+            }).then((r) => r.json());
+
+            if (!imageUploadResult.secure_url) {
+                throw new Error('Image upload failed');
+            }
+
+            const response = await axios.put(`${SERVER_URL}/api/teachers/${id}`, {
+                ...data,
+                image: imageUploadResult.secure_url,
+            });
+
+            console.log('Teacher Information updated successfully', response.data);
         } catch (error) {
-            console.error('Error uploading data', error);
+            console.error('Error updating teacher data', error);
         }
     };
-
 
 
     return (
@@ -136,7 +131,7 @@ export default function UpdateTeacher() {
                                 label="Phone"
                                 fullWidth
                                 defaultValue={teacher?.phone}
-                                disabled
+
                                 {...register("phone", { required: 'Phone is required' })}
                                 error={Boolean(errors.phone)}
                                 helperText={errors.phone && errors.phone.message}
@@ -315,6 +310,11 @@ export default function UpdateTeacher() {
                             <img src={imageURL} alt="Uploaded" placeholder='photo' className='h-40 w-40 border-2' style={{ maxWidth: '100%' }} />
                         </Grid>
                     )}
+
+                    <Grid item xs={12}>
+                        <p className='text-xl'>Student Photo</p>
+                        <img className='h-40 w-40 border-2' src={teacher?.image} alt="" />
+                    </Grid>
 
                     <Grid item xs={12}>
                         <Button type="submit" variant="contained" color="primary">
