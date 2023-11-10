@@ -17,13 +17,13 @@ import Register from './pages/auth/Register/Register';
 import PrivateLayout from './layouts/private/PrivateLayout';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Student } from './pages/Student/Student';
-import { Teacher } from './pages/Teacher/Teacher';
-import { Notices } from './pages/Notices/Notices';
+import { Teacher } from './pages/Teacher/Teacher'; 
 import { AddTeacher } from './pages/AddTeacher/AddTeacher';
 import { AddStudent } from './pages/AddStudent/AddStudent';
 import { SERVER_URL } from './config/config';
 import UpdateStudent from './pages/UpdateStudent/UpdateStudent';
 import UpdateTeacher from './pages/UpdateTeacher/UpdateTeacher';
+import Notices from './pages/Notices/Notices';
 
 
 

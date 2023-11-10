@@ -21,7 +21,7 @@ export const Teacher = () => {
     return (
         <Box>
             <Box className='flex justify-between items-center px-'>
-                <Typography variant="h6" component="div">Invoice</Typography>
+                <Typography variant="h6" component="div"> Our Teacher</Typography>
                 <Link to={Paths.ADD_TEACHER}>
                     <Button variant='contained' size="large" color="primary" startIcon={<AddIcon />}>
                         Add  Teacher

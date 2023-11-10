@@ -70,10 +70,11 @@ export default function UpdateStudent() {
             body: formData
         }).then(r => r.json());
         console.log("result", result.secure_url);
+        // console.log(student);
         try {
             const response = await axios.put(`${SERVER_URL}/api/students/${id}`, { ...data, image: result.secure_url });
             console.log('Student Information updated successfully', response.data);
-            Navigate('/app/students')
+            // Navigate('/app/students')
         } catch (error) {
             console.error('Error updating student data', error);
         }

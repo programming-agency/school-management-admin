@@ -31,6 +31,8 @@ export default function UpdateTeacher() {
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
     const { id } = useParams<{ id: string }>();
 
+    const Navigate = useNavigate();
+
     useEffect(() => {
         const getTeacherData = async () => {
             try {
@@ -78,6 +80,7 @@ export default function UpdateTeacher() {
             });
 
             console.log('Teacher Information updated successfully', response.data);
+            Navigate('/app/teachers')
         } catch (error) {
             console.error('Error updating teacher data', error);
         }
