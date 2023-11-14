@@ -55,34 +55,37 @@ export default function UpdateTeacher() {
     }
 
     const onSubmit = async (data: FormData) => {
-        try {
-            if (!file) {
-                throw new Error('No image selected');
+        if (!file) {
+            // If the file is not changed, use the existing image URL
+            try {
+                const response = await axios.put(`${SERVER_URL}/api/teachers/${id}`, { ...data, image: teacher.image });
+                console.log(' teacher Information updated successfully', response.data);
+                // Navigate('/app/students')
+            } catch (error) {
+                console.error('Error updating student data', error);
             }
+            return;
+        }
 
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('upload_preset', 'seytcuol');
-            formData.append('api_key', '512147963287944');
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', 'seytcuol');
+        formData.append('api_key', '512147963287944');
 
+        try {
             const imageUploadResult = await fetch('https://api.cloudinary.com/v1_1/dofqwdx2y/image/upload', {
                 method: 'POST',
                 body: formData,
             }).then((r) => r.json());
 
-            if (!imageUploadResult.secure_url) {
-                throw new Error('Image upload failed');
-            }
+            const imageUrlToUpdate = imageUploadResult.secure_url;
 
-            const response = await axios.put(`${SERVER_URL}/api/teachers/${id}`, {
-                ...data,
-                image: imageUploadResult.secure_url,
-            });
+            const response = await axios.put(`${SERVER_URL}/api/teachers/${id}`, { ...data, image: imageUrlToUpdate });
 
             console.log('Teacher Information updated successfully', response.data);
-            Navigate('/app/teachers')
+            Navigate("/")
         } catch (error) {
-            console.error('Error updating teacher data', error);
+            console.error('error updating teacher data', error)
         }
     };
 

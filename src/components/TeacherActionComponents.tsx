@@ -31,7 +31,7 @@ export default function TeacherActionComponents({ teacher, setTeacher }: Props) 
     }
 
     const handleEdit = (_id: string) => {
-        console.log(_id);
+        // console.log(_id);
         Navigate(`/app/updateTeacher/${_id}`)
     };
 

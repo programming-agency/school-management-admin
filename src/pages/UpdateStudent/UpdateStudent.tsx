@@ -57,30 +57,38 @@ export default function UpdateStudent() {
         setImageURL(URL.createObjectURL(target.files[0]));
     }
     const onSubmit = async (data: FormData) => {
-        console.log(student);
-// const updateImage = student.image || 
-        
-        if (typeof file === "undefined") return
+        if (!file) {
+            // If the file is not changed, use the existing image URL
+            try {
+                const response = await axios.put(`${SERVER_URL}/api/students/${id}`, { ...data, image: student.image });
+                console.log('Student Information updated successfully', response.data);
+                // Navigate('/app/students')
+            } catch (error) {
+                console.error('Error updating student data', error);
+            }
+            return;
+        }
 
+        // If the file is changed, upload the new image to Cloudinary
         const formData = new FormData();
-        formData.append('file', file)
-        formData.append('upload_preset', "seytcuol")
-        formData.append('api_key', "512147963287944")
-        // console.log(file);
-
-        const result = await fetch('https://api.cloudinary.com/v1_1/dofqwdx2y/image/upload', {
-            method: "POST",
-            body: formData
-        }).then(r => r.json());
-        console.log("result", result.secure_url);
-        // console.log(student);
+        formData.append('file', file);
+        formData.append('upload_preset', "seytcuol");
+        formData.append('api_key', "512147963287944");
 
         try {
+            const imageUploadResult = await fetch('https://api.cloudinary.com/v1_1/dofqwdx2y/image/upload', {
+                method: "POST",
+                body: formData
+            }).then(r => r.json());
 
-            console.log(student.image);
-            const response = await axios.put(`${SERVER_URL}/api/students/${id}`, { ...data, image: result.secure_url });
+            console.log("Cloudinary result", imageUploadResult.secure_url);
+
+            const imageUrlToUpdate = imageUploadResult.secure_url ;
+
+            const response = await axios.put(`${SERVER_URL}/api/students/${id}`, { ...data, image: imageUrlToUpdate });
+
             console.log('Student Information updated successfully', response.data);
-            // Navigate('/app/students')
+            Navigate('/') // Uncomment this line if you want to navigate after a successful update.
         } catch (error) {
             console.error('Error updating student data', error);
         }

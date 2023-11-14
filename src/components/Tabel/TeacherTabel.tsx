@@ -32,7 +32,7 @@ export const TeacherTable = () => {
     }, []);
 
     const reverseTeacher = [...teachers].reverse();
-    console.log(teachers);
+    // console.log(teachers);
 
     return (
         <Box>
