@@ -57,6 +57,9 @@ export default function UpdateStudent() {
         setImageURL(URL.createObjectURL(target.files[0]));
     }
     const onSubmit = async (data: FormData) => {
+        console.log(student);
+// const updateImage = student.image || 
+        
         if (typeof file === "undefined") return
 
         const formData = new FormData();
@@ -71,7 +74,10 @@ export default function UpdateStudent() {
         }).then(r => r.json());
         console.log("result", result.secure_url);
         // console.log(student);
+
         try {
+
+            console.log(student.image);
             const response = await axios.put(`${SERVER_URL}/api/students/${id}`, { ...data, image: result.secure_url });
             console.log('Student Information updated successfully', response.data);
             // Navigate('/app/students')
@@ -80,7 +86,7 @@ export default function UpdateStudent() {
         }
     };
 
-
+    // console.log(student.image);
     return (
         <Box>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -265,8 +271,9 @@ export default function UpdateStudent() {
                             />
                         }
                     </Grid>
-                    <Grid item xs={6}>
-                        <input type="file" accept="image/*" name="image" id="" onChange={handleImage} />
+                    <Grid item xs={12}>
+                        <p className='text-xl'>Student Photo</p>
+                        <img className='h-40 w-40 border-2' src={student?.image} alt="" />
                     </Grid>
                     {imageURL && ( // Display the image only when imageURL is not empty
                         <Grid item xs={12}>
@@ -275,10 +282,12 @@ export default function UpdateStudent() {
                         </Grid>
                     )}
 
-                    <Grid item xs={12}>
-                        <p className='text-xl'>Student Photo</p>
-                        <img className='h-40 w-40 border-2' src={student?.image} alt="" />
+                    <Grid item xs={6}>
+                        <input type="file" accept="image/*" name="image" id="" onChange={handleImage} />
                     </Grid>
+
+
+
 
                     <Grid item xs={12}>
                         <Button type="submit" variant="contained" color="primary">

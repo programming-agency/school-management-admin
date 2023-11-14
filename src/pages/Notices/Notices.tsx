@@ -30,6 +30,9 @@ export default function Notices() {
     }
   }
 
+  const reversedNotices = [...notices].reverse();
+  console.log(reversedNotices);
+
   useEffect(() => {
     const getPosts = async () => {
       try {
@@ -43,7 +46,7 @@ export default function Notices() {
     getPosts();
   }, []);
 
-  console.log(notices);
+  // console.log(notices);
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -67,8 +70,8 @@ export default function Notices() {
         </Grid>
       </form>
       <Box>
-        <Box className="text-3xl  mb-10 text-center">All Notices </Box>
-        {notices.map((notice, index) => (
+        <Box className="text-3xl  mb-10 text-center">Recently Public Notices </Box>
+        {reversedNotices.map((notice, index) => (
           <Box className='text-xl pt-5' key={index}>{notice.createNotices}</Box>
         ))}
       </Box>

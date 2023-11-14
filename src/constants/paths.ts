@@ -5,5 +5,6 @@ export const Paths = {
     ADD_STUDENT: '/app/addStudent',
     STUDENT: '/app/students',
     NOTICES: '/app/notices',
+    APPLIED: '/app/applied',
 
 }

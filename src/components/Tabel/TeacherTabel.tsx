@@ -13,7 +13,7 @@ interface Teacher {
     email: string;
     subject: string;
     _id: string;
-    
+
 }
 export const TeacherTable = () => {
     const [teachers, setTeacher] = useState<Teacher[]>([]);
@@ -31,6 +31,7 @@ export const TeacherTable = () => {
         getPosts();
     }, []);
 
+    const reverseTeacher = [...teachers].reverse();
     console.log(teachers);
 
     return (
@@ -49,7 +50,7 @@ export const TeacherTable = () => {
                         <TableCell align='center'> Action </TableCell>
                     </TableHead>
                     {
-                        teachers.map((teacher, index) => (
+                        reverseTeacher.map((teacher, index) => (
                             <TableBody key={index}>
                                 <TableCell align='center' className='whitespace-nowrap'># {index + 1}</TableCell>
                                 <TableCell align='center' ><Avatar alt="Teacher Photo" src={teacher.image} /> </TableCell>

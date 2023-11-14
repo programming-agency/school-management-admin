@@ -30,10 +30,9 @@ export default function StudentActionComponents({ student, setStudent }: Props) 
     }
 
     const handleEdit = (_id: string) => {
-        console.log(_id);
+        // console.log(_id);
         Navigate(`/app/updateStudent/${_id}`)
 
-        console.log('Click edit');
     };
 
     const handleDelete = async (_id: string) => {

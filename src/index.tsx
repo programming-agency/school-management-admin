@@ -17,13 +17,17 @@ import Register from './pages/auth/Register/Register';
 import PrivateLayout from './layouts/private/PrivateLayout';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Student } from './pages/Student/Student';
-import { Teacher } from './pages/Teacher/Teacher'; 
+import { Teacher } from './pages/Teacher/Teacher';
 import { AddTeacher } from './pages/AddTeacher/AddTeacher';
 import { AddStudent } from './pages/AddStudent/AddStudent';
 import { SERVER_URL } from './config/config';
 import UpdateStudent from './pages/UpdateStudent/UpdateStudent';
 import UpdateTeacher from './pages/UpdateTeacher/UpdateTeacher';
 import Notices from './pages/Notices/Notices';
+import AppliedStudent from './pages/AppliedStudent/AppliedStudent';
+import AcceptStudent from './pages/AppliedStudent/AcceptStudent';
+// import AppliedStudents from './pages/AppliedStudents/AppliedStudents';
+ 
 
 
 
@@ -55,6 +59,8 @@ const Root = () => {
           <Route path="notices" element={<Notices />} />
           <Route path="addTeacher" element={<AddTeacher />} />
           <Route path="addStudent" element={<AddStudent />} />
+          <Route path="applied" element={<AppliedStudent />} />
+          <Route path="appliedStudent/:id" element={<AcceptStudent />} />
           <Route path="updateStudent/:id" element={<UpdateStudent />} />
           <Route path="updateTeacher/:id" element={< UpdateTeacher />} />
 

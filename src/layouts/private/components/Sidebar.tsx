@@ -3,10 +3,13 @@ import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from 
 
 import DashboardIcon from './icons/DashboardIcon'
 import { Link, useLocation } from 'react-router-dom'
-import { Paths } from '../../../constants/paths' 
+import { Paths } from '../../../constants/paths'
 import { StudentIcon } from './icons/StudentIcon'
 import { NoticeIcon } from './icons/NoticeIcon'
 import { TeacherIcon } from './icons/TeacherIcon'
+import AppliedIcon from './icons/AppliedIcon'
+
+
 
 export default function Sidebar() {
 
@@ -33,7 +36,7 @@ export default function Sidebar() {
           <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
-              <NoticeIcon/>
+                <NoticeIcon />
               </ListItemIcon>
               <ListItemText primary={<Box className={`min-w-[160px] ${pathname == Paths.NOTICES && 'border-r-[2px]'}`}>Notice Board</Box>} />
             </ListItemButton>
@@ -46,7 +49,7 @@ export default function Sidebar() {
           <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                <TeacherIcon/>
+                <TeacherIcon />
               </ListItemIcon>
               <ListItemText primary={<Box className={`min-w-[160px] ${pathname == Paths.TEACHER && 'border-r-[2px]'}`}>Teachers</Box>} />
             </ListItemButton>
@@ -59,9 +62,22 @@ export default function Sidebar() {
           <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                <StudentIcon/>
+                <StudentIcon />
               </ListItemIcon>
               <ListItemText primary={<Box className={`min-w-[160px] ${pathname == Paths.STUDENT && 'border-r-[2px]'}`}>Students</Box>} />
+            </ListItemButton>
+          </ListItem>
+        </Link>
+
+      </List>
+      <List>
+        <Link to={Paths.APPLIED}>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <AppliedIcon />
+              </ListItemIcon>
+              <ListItemText primary={<Box className={`min-w-[160px] ${pathname == Paths.APPLIED && 'border-r-[2px]'}`}>Applied Students</Box>} />
             </ListItemButton>
           </ListItem>
         </Link>

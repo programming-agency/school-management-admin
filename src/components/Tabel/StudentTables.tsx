@@ -38,7 +38,7 @@ export const StudentTable = () => {
 
   // console.log(students);
 
-
+  const reverseStudent = [...students].reverse();
 
 
 
@@ -58,7 +58,7 @@ export const StudentTable = () => {
             <TableCell align='center'> Action </TableCell>
           </TableHead>
           {
-            students.map((student, index) => (
+            reverseStudent.map((student, index) => (
               <TableBody key={index}>
                 <TableCell align='center' ># {index + 1}</TableCell>
                 <TableCell align='center' ><Avatar alt="student Photo" src={student.image} /> </TableCell>
