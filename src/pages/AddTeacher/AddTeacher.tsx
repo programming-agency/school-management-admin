@@ -7,6 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import axios from 'axios';
 import { SERVER_URL } from '../../config/config';
 import { Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 
 interface FormData {
@@ -29,8 +30,9 @@ interface FormData {
 export const AddTeacher = () => {
   const [file, setFile] = useState<File | undefined>()
   const [imageURL, setImageURL] = useState<string>('');
-
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+
+  const navigate = useNavigate();
 
 
   function handleImage(e: React.FormEvent<HTMLInputElement>) {
@@ -64,6 +66,7 @@ export const AddTeacher = () => {
     try {
       const response = await axios.post(`${SERVER_URL}/api/teachers`, { ...data, image: result.secure_url });
       console.log('Data uploaded successfully', response.data);
+      navigate("/app/teacher")
     } catch (error) {
       console.error('Error uploading data', error);
     }

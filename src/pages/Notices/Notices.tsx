@@ -31,7 +31,7 @@ export default function Notices() {
   }
 
   const reversedNotices = [...notices].reverse();
-  console.log(reversedNotices);
+  // console.log(reversedNotices);
 
   useEffect(() => {
     const getPosts = async () => {

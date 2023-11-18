@@ -71,7 +71,7 @@ export default function AppliedStudent() {
                             <TableCell align='center'>Profile</TableCell>
                             <TableCell align='center'> Name</TableCell>
                             <TableCell align='center'> Coll</TableCell>
-                            <TableCell align='center'>Class</TableCell>
+                            <TableCell align='center'>Address</TableCell>
 
                             <TableCell align='center'>status</TableCell>
                             <TableCell align='center'> Action </TableCell>
@@ -81,10 +81,13 @@ export default function AppliedStudent() {
                                 <TableBody key={index}>
                                     <TableCell align='center' ># {index + 1}</TableCell>
                                     <TableCell align='center' ><Avatar alt="student Photo" src={student.image} /> </TableCell>
-                                    <TableCell align='center' >{student.studentName}</TableCell>
+                                    <TableCell align='center' >{student.studentName} 
+                                    </TableCell>
                                     <TableCell align='center' >{student.phone}</TableCell>
                                     <TableCell align='center'>{student.address}</TableCell>
-                                    <TableCell align='center'> <Button variant='contained'>{student.status}</Button></TableCell>
+                                    <TableCell align='center'> <Button
+                                     color={student.status === 'pending' ? 'error' : 'success'}
+                                     variant='contained'>{student.status}</Button></TableCell>
 
                                     <TableCell align='center'>
                                         <Button variant='contained' onClick={() => handleEdit(student._id)}

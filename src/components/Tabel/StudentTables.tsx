@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { TableContainer, Table, TableHead, TableCell, TableBody, Button, Menu, Box, Avatar, } from '@mui/material'
+import { TableContainer, Table, TableHead, TableCell, TableBody, Button, Menu, Box, Avatar, FormControl, Select, MenuItem, OutlinedInput, InputAdornment, Paper, SelectChangeEvent, } from '@mui/material'
 import axios from 'axios';
 import { SERVER_URL } from '../../config/config';
 import StudentActionComponents from '../StudentActionComponents';
+import { GridSearchIcon } from '@mui/x-data-grid';
 
 interface Student {
   studentName: string;
@@ -22,12 +23,17 @@ interface Student {
 
 export const StudentTable = () => {
   const [students, setStudent] = useState<Student[]>([]);
+  const [name, setName] = React.useState('def');
+  const [search, setSearch] = useState('');
+  const [filterdata, setFilterData] = useState<Student[]>([]);
+
 
   useEffect(() => {
     const getPosts = async () => {
       try {
         const result = await axios(`${SERVER_URL}/api/students`);
         setStudent(result.data);
+        setFilterData(result.data)
         // console.log(result.data);
       } catch (error) {
         console.error('Error fetching student:', error);
@@ -40,10 +46,50 @@ export const StudentTable = () => {
 
   const reverseStudent = [...students].reverse();
 
+  const handleChange = (event: SelectChangeEvent) => {
+    const selectorName = event.target.value as string;
+    setName(selectorName);
+
+    if (selectorName === 'def') {
+      // If 'Filter' is selected, show all students
+      setFilterData(reverseStudent);
+    } else {
+      // Filter students based on the selected class
+      const filteredData = students.filter((student) => student.studentClass === selectorName);
+      setFilterData(filteredData);
+    }
+  };
 
 
+  console.log(name);
   return (
     <Box>
+      <Paper className='flex gap-4 p-4' elevation={0.0}>
+        <FormControl sx={{ width: "25%" }}>
+          <Select
+            value={name}
+            onChange={handleChange}
+          >
+            <MenuItem value="def" disabled >Filter</MenuItem>
+            <MenuItem value="One">ONE</MenuItem>
+            <MenuItem value="Two">TWO</MenuItem>
+            <MenuItem value="Three">THREE</MenuItem>
+            <MenuItem value="Four">FOUR</MenuItem>
+            <MenuItem value="Five">FIVE</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl fullWidth>
+          <OutlinedInput
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder='Search ...'
+            startAdornment={<InputAdornment position="start">
+              <GridSearchIcon sx={{ color: 'action.active', mr: 1, }} />
+            </InputAdornment>}
+          />
+        </FormControl>
+        <Button variant='contained' size='large'>Search</Button>
+      </Paper>
+      {/* Table data */}
       <TableContainer >
         <Table aria-label="spanning table">
           <TableHead >
@@ -58,9 +104,11 @@ export const StudentTable = () => {
             <TableCell align='center'> Action </TableCell>
           </TableHead>
           {
-            reverseStudent.map((student, index) => (
+            filterdata.filter((student) => {
+              return search.toLowerCase() === '' ? student : student.studentName.toLowerCase().includes(search)
+            }).map((student, index) => (
               <TableBody key={index}>
-                <TableCell align='center' ># {index + 1}</TableCell>
+                <TableCell align='center' >{index + 1}</TableCell>
                 <TableCell align='center' ><Avatar alt="student Photo" src={student.image} /> </TableCell>
                 <TableCell align='center' >{student.studentName}</TableCell>
                 <TableCell align='center' > {student.phone}</TableCell>

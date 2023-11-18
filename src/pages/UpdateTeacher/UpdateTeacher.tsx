@@ -60,7 +60,7 @@ export default function UpdateTeacher() {
             try {
                 const response = await axios.put(`${SERVER_URL}/api/teachers/${id}`, { ...data, image: teacher.image });
                 console.log(' teacher Information updated successfully', response.data);
-                // Navigate('/app/students')
+                Navigate('/app/students')
             } catch (error) {
                 console.error('Error updating student data', error);
             }
@@ -318,7 +318,7 @@ export default function UpdateTeacher() {
                     )}
 
                     <Grid item xs={12}>
-                        <p className='text-xl'>Student Photo</p>
+                        <p className='text-xl'>Teacher Photo</p>
                         <img className='h-40 w-40 border-2' src={teacher?.image} alt="" />
                     </Grid>
 

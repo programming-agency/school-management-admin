@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { TableContainer, Table, TableHead, TableCell, TableBody, Box, Avatar, } from '@mui/material'
+import { TableContainer, Table, TableHead, TableCell, TableBody, Box, Avatar, Paper, FormControl, Select, MenuItem, OutlinedInput, InputAdornment, Button, SelectChangeEvent, } from '@mui/material'
 import axios from 'axios';
 import { SERVER_URL } from '../../config/config';
 import TeacherActionComponents from '../TeacherActionComponents';
+import { GridSearchIcon } from '@mui/x-data-grid';
+import { setServers } from 'dns';
 
 interface Teacher {
     name: string;
@@ -17,6 +19,8 @@ interface Teacher {
 }
 export const TeacherTable = () => {
     const [teachers, setTeacher] = useState<Teacher[]>([]);
+    const [name, setName] = React.useState('def');
+    const [search, setSearch] = useState('');
 
     useEffect(() => {
         const getPosts = async () => {
@@ -30,12 +34,42 @@ export const TeacherTable = () => {
         };
         getPosts();
     }, []);
-
+    const handleChange = (event: SelectChangeEvent) => {
+        setName(event.target.value as string);
+    };
     const reverseTeacher = [...teachers].reverse();
     // console.log(teachers);
+    // console.log(search);
+    console.log(name);
 
     return (
         <Box>
+            <Box>
+                {/* search bar */}
+                <Paper className='flex gap-4 p-4' elevation={0.0}>
+                    <FormControl sx={{ width: "25%" }}>
+                        <Select
+                            value={name}
+                            onChange={handleChange}
+                        >
+                            <MenuItem value="def" disabled >Filter</MenuItem>
+                            <MenuItem value="Recent">Recent</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <FormControl fullWidth>
+
+                        <OutlinedInput
+                            onChange={(e) => setSearch(e.target.value)}
+                            placeholder='Search ...'
+                            startAdornment=
+                            {<InputAdornment position="start">
+                                <GridSearchIcon sx={{ color: 'action.active', mr: 1, }} />
+                            </InputAdornment>}
+                        />
+                    </FormControl>
+                    <Button variant='contained' size='large'>Search</Button>
+                </Paper>
+            </Box>
             <TableContainer >
                 <Table aria-label="spanning table">
                     <TableHead >
@@ -50,9 +84,11 @@ export const TeacherTable = () => {
                         <TableCell align='center'> Action </TableCell>
                     </TableHead>
                     {
-                        reverseTeacher.map((teacher, index) => (
+                        reverseTeacher.filter((teacher) => {
+                            return search.toLowerCase() === '' ? teacher : teacher.name.toLowerCase().includes(search)
+                        }).map((teacher, index) => (
                             <TableBody key={index}>
-                                <TableCell align='center' className='whitespace-nowrap'># {index + 1}</TableCell>
+                                <TableCell align='center' className='whitespace-nowrap'>{index + 1}</TableCell>
                                 <TableCell align='center' ><Avatar alt="Teacher Photo" src={teacher.image} /> </TableCell>
                                 <TableCell align='center' >{teacher.name}</TableCell>
                                 <TableCell align='center' > {teacher.address}</TableCell>
