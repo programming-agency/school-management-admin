@@ -6,5 +6,7 @@ export const Paths = {
     STUDENT: '/app/students',
     NOTICES: '/app/notices',
     APPLIED: '/app/applied',
+    ACCOUNT: '/app/accounts',
+    BAIL_PAID: '/app/billPaid',
 
 }

@@ -7,6 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import axios from 'axios';
 import { SERVER_URL } from '../../config/config';
 import { Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 
 interface FormData {
@@ -29,6 +30,7 @@ export const AddStudent = () => {
     const [file, setFile] = useState<File | undefined>()
     const [imageURL, setImageURL] = useState<string>('');
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+    const Navigate = useNavigate();
 
     function handleImage(e: React.FormEvent<HTMLInputElement>) {
         const target = e.target as HTMLIFrameElement & {
@@ -57,9 +59,10 @@ export const AddStudent = () => {
 
         try {
             const response = await axios.post(`${SERVER_URL}/api/students`, { ...data, image: result.secure_url });
-            console.log('Data uploaded successfully', response.data);
+            console.log(' student create successfully ', response.data);
+            Navigate('/')
         } catch (error) {
-            console.error('Error uploading data', error);
+            console.error('Error  create student', error);
         }
     };
 

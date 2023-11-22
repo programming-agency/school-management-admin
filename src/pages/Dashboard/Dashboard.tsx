@@ -18,7 +18,7 @@ export default function Dashboard() {
           <DashBoardCard total='Students' employ={450} />
         </Box>
         <Box className="bg-[#F87E26] col-span-1 rounded-[10px]">
-          <DashBoardCard total='Teacher' employ={25} />
+          <DashBoardCard total='Teacher' employ={50} />
         </Box>
         <Box className="bg-[#2152F8] col-span-1 rounded-[10px]">
           <DashBoardCard total='Notices' employ={10} />
@@ -34,13 +34,13 @@ export default function Dashboard() {
         <Box className="w-full">
           <Paper className='w-full'>
             <Box>
-              <Box className="font-semibold px-3 py-3">Statistic</Box>
+              <Box className="font-semibold text-center px-3 py-3"> Student Performance</Box>
               {/* Chart */}
               <DonutChart />
               {/* details */}
               <Box className='p-3 my-5'>
-                <Box className='flex py-2 justify-between'>
-                  <Box className="flex items-center  w-[50%] gap-2 ">
+                {/* <Box className='flex py-2 justify-between'>
+                  <Box className="flex items-center justify-center  w-[50%] gap-2 ">
                     <Box className='h-4 w-4 rounded-full   bg-[#2152F8]'></Box>
                     <Box className="text-[14px]  ">Today</Box>
                   </Box>
@@ -48,17 +48,28 @@ export default function Dashboard() {
                     <Box className='h-4 w-4 rounded-full bg-[#50D27E]'></Box>
                     <Box className="text-[14px]  ">Yesterday</Box>
                   </Box>
+                </Box> */}
+                <Box className='flex gap-5'>
+                  <Box className="flex items-center justify-center w-[50%] gap-2 ">
+                    <Box className='h-4 w-4 rounded-full   bg-[#2152F8]'></Box>
+                    <Box className="text-[14px]  ">Today......</Box>
+                  </Box>
+                  <Box className="flex items-center   w-[50%] gap-2 ">
+                    <Box className='h-4 w-4 rounded-full bg-[#50D27E]'></Box>
+                    <Box className="text-[14px]  ">Yesterday</Box>
+                  </Box>
                 </Box>
                 <Box className='flex gap-5'>
                   <Box className="flex items-center justify-center w-[50%] gap-2 ">
                     <Box className='h-4 w-4 rounded-full bg-[orange]'></Box>
-                    <Box className="text-[14px]  ">18/09/2023</Box>
+                    <Box className="text-[14px]  ">16/11/2023</Box>
                   </Box>
                   <Box className="flex items-center   w-[50%] gap-2 ">
                     <Box className='h-4 w-4 rounded-full bg-[red]'></Box>
-                    <Box className="text-[14px]  ">17/09/2023</Box>
+                    <Box className="text-[14px]  ">15/11/2023</Box>
                   </Box>
                 </Box>
+
               </Box>
             </Box>
 

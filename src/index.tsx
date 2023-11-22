@@ -26,8 +26,13 @@ import UpdateTeacher from './pages/UpdateTeacher/UpdateTeacher';
 import Notices from './pages/Notices/Notices';
 import AppliedStudent from './pages/AppliedStudent/AppliedStudent';
 import AcceptStudent from './pages/AppliedStudent/AcceptStudent';
+import { Accounts } from './pages/Acounts/Accounts';
+import { PaidBill } from './pages/PaidBill/PaidBill';
+import BillDetails from './pages/BillDetials/BillDetails';
+
+
 // import AppliedStudents from './pages/AppliedStudents/AppliedStudents';
- 
+
 
 
 
@@ -60,6 +65,10 @@ const Root = () => {
           <Route path="addTeacher" element={<AddTeacher />} />
           <Route path="addStudent" element={<AddStudent />} />
           <Route path="applied" element={<AppliedStudent />} />
+          <Route path="accounts" element={<Accounts />} />
+          <Route path="billPaid" element={<PaidBill />} />
+          <Route path="billPaid/:id" element={< BillDetails />} />
+
           <Route path="appliedStudent/:id" element={<AcceptStudent />} />
           <Route path="updateStudent/:id" element={<UpdateStudent />} />
           <Route path="updateTeacher/:id" element={< UpdateTeacher />} />

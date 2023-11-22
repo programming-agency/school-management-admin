@@ -8,6 +8,8 @@ import { StudentIcon } from './icons/StudentIcon'
 import { NoticeIcon } from './icons/NoticeIcon'
 import { TeacherIcon } from './icons/TeacherIcon'
 import AppliedIcon from './icons/AppliedIcon'
+import AccountsIcon from './icons/AccountsIcon'
+import PaidIcon from './icons/paidIcon'
 
 
 
@@ -68,7 +70,6 @@ export default function Sidebar() {
             </ListItemButton>
           </ListItem>
         </Link>
-
       </List>
       <List>
         <Link to={Paths.APPLIED}>
@@ -78,6 +79,29 @@ export default function Sidebar() {
                 <AppliedIcon />
               </ListItemIcon>
               <ListItemText primary={<Box className={`min-w-[160px] ${pathname == Paths.APPLIED && 'border-r-[2px]'}`}>Applied Students</Box>} />
+            </ListItemButton>
+          </ListItem>
+        </Link>
+
+      </List>
+      <List>
+        <Link to={Paths.ACCOUNT}>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <AccountsIcon />
+              </ListItemIcon>
+              <ListItemText primary={<Box className={`min-w-[160px] ${pathname == Paths.ACCOUNT && 'border-r-[2px]'}`}>Accounts</Box>} />
+            </ListItemButton>
+          </ListItem>
+        </Link>
+        <Link to={Paths.BAIL_PAID}>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                < PaidIcon />
+              </ListItemIcon>
+              <ListItemText primary={<Box className={`min-w-[160px] ${pathname == Paths.BAIL_PAID && 'border-r-[2px]'}`}>Bill Paid</Box>} />
             </ListItemButton>
           </ListItem>
         </Link>
