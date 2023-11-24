@@ -11,7 +11,9 @@ export default function BillDetails() {
   const [billId] = React.useState('PPS123');
   const [date, setDate] = React.useState(new Date());
   const componentRef = useRef<any>(null);
-  console.log(id);
+  const [inputValue, setInputValue] = useState('');
+  const [selectedMonth, setSelectedMonth] = useState<string>('');
+  // console.log(id);
 
   useEffect(() => {
     const getPosts = async () => {
@@ -26,20 +28,52 @@ export default function BillDetails() {
     getPosts();
   }, []);
 
-  React.useEffect(() => {
-    const intervalId = setInterval(() => {
-      setDate(new Date());
-    }, 1000);
+  // React.useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     setDate(new Date());
+  //   }, 1000);
 
-    // Clear the interval when the component is unmounted
-    return () => clearInterval(intervalId);
-  }, []);
+  //   // Clear the interval when the component is unmounted
+  //   return () => clearInterval(intervalId);
+  // }, []);
 
-  console.log(student.bailStatus);
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  };
+  const handleMonthChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setSelectedMonth(event.target.value as string);
+  };
 
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    try {
+      const response = await axios.put(`${SERVER_URL}/api/paidStudents/${id}`, {
+        bailStatus: {
+          [selectedMonth]: "Paid",
+        },
+      });
+
+
+      console.log('API Response:', response.data);
+      // Assuming the API returns some confirmation or updated student data
+      setStudent(response.data.student);
+      console.log(response.data.updatedStudent);
+
+      console.log(response.data); // Log the response for debugging
+    } catch (error) {
+      console.error('Error updating billing status:', error);
+    }
+  };
+
+
+  // console.log(student.bailStatus);
+  console.log(inputValue);
+  console.log(selectedMonth);
+  console.log(student.billerStatus);
   return (
     <Box>
-      <form >
+      <form onSubmit={handleFormSubmit} >
         < Paper className='text-center text-4xl mb-5  py-2 '>  Student billing  Information </ Paper>
         <Grid container spacing={2}>
 
@@ -183,7 +217,8 @@ export default function BillDetails() {
               <TextField
                 label="Month"
                 fullWidth
-
+                value={selectedMonth}
+                onChange={handleMonthChange}
                 select
 
               >
@@ -207,16 +242,13 @@ export default function BillDetails() {
           </Grid>
 
           <Grid item xs={6}>
-            {
-
-              <TextField
-                label="Amount"
-                fullWidth
-                type='number'
-
-
-              />
-            }
+            <TextField
+              label="Amount"
+              fullWidth
+              type="number"
+              value={inputValue}
+              onChange={handleInputChange}
+            />
           </Grid>
 
           <Grid item xs={12}>
@@ -235,7 +267,7 @@ export default function BillDetails() {
 
       {/* invoice section */}
 
-      <Paper ref={componentRef} className='w-3/4 mx-auto py-5'>
+      <Paper ref={componentRef} className='w-3/4 px-5 mx-auto py-5'>
 
         <h1 className='text-2xl font-medium text-center'> Programming Agency Public School </h1>
         <p className='text-center'>Hatiya, Ulipur, Kurigram</p>
@@ -286,19 +318,40 @@ export default function BillDetails() {
               <TableCell  >
                 Month
               </TableCell>
-              <TableCell  >: {student?.month}</TableCell>
+              <TableCell  >: {selectedMonth}</TableCell>
             </TableBody>
             <TableBody>
               <TableCell  >
                 Amount
               </TableCell>
-              <TableCell  >: {student?.amount}</TableCell>
+              <TableCell  >:   {inputValue}</TableCell>
             </TableBody>
+            <TableBody>
+              <TableCell  >
+                Total
+              </TableCell>
+              <TableCell  >:  {inputValue}</TableCell>
+            </TableBody>
+
           </Table>
+
+          <Box className="pt-10 flex justify-between">
+
+            <Box >
+              <hr className='w-32 text-black bg-black' />
+              Parent Signature
+            </Box>
+            <Box>
+              <hr className='w-32 text-black bg-black' />
+              Cash Receiver
+            </Box>
+          </Box>
+          <p className='text-end text-blue-600'>Paid</p>
         </TableContainer>
 
 
       </Paper>
+      {/* Print button */}
       <Box className="flex justify-end">
         <ReactToPrint
           trigger={() => <Button variant='contained'>Print</Button>}

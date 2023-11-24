@@ -124,6 +124,7 @@ export const Accounts = () => {
                   student && typeof student.bailStatus === 'object' &&
                   Object.entries(student.bailStatus).map(([month, status], index) => (
                     <TableCell key={index} align='center'>
+
                       <Button variant='contained' color={status === 'Paid' ? 'success' : 'error'}>
                         {status}
                       </Button>
